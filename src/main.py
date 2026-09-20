@@ -1,5 +1,5 @@
 from funcs import f1, f2, f3, f4
-from methods import *
+from metodos import *
 from problema import Problema
 
 problemas = [
