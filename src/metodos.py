@@ -5,7 +5,28 @@ MAX_ITER = 100
 
 
 def newton(f, a, b):
-    pass
+        if df is None:
+        def df(x):
+            return dydx(f, x)
+ 
+    x = (a + b) / 2
+    for k in range(1, max_iter + 1):
+        fx = f(x)
+        dfx = df(x)
+ 
+        if abs(dfx) < 1e-14:
+            raise ValueError(f"derivada praticamente nula em x = {x}")
+ 
+        x_novo = x - fx / dfx
+ 
+        if x_novo < a or x_novo > b:
+            raise ValueError(f"Newton saiu do interval")
+ 
+        if abs(x_novo - x) < eps and abs(f(x_novo)) < eps:
+            return x_novo, k
+        x = x_novo
+ 
+    return x, max_iter
 
 
 def bisseccao(f, a, b, eps=EPS, max_iter=MAX_ITER):
