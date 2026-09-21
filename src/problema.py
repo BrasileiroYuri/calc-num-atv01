@@ -13,6 +13,14 @@ def sinal(v):
     return 0
 
 
+def dydx(f, x, h=1e-8):
+    return (f(x + h) - f(x)) / h
+
+
+def dydx_central(f, x, h=1e-6):
+    return (f(x + h) - f(x - h)) / (2 * h)
+
+
 def tabelar(f, a, b, h):
     tabela = []
     n = floor((b - a) / h)
@@ -69,11 +77,8 @@ class Problema:
         plt.show()
         plt.close()
 
-    def dydx_central(f,x,h=1e-6)
-        return (f(x+h)-f(x-h))/(2*h)
-
     def dydx(self, x, h=1e-8):
-        return (self.f(x + h) - self.f(x)) / h
+        return dydx(self.f, x, h)  # chama a função solta dydx (acima)
 
     def corolario(self, a, b, n=100):
         positivo = False
