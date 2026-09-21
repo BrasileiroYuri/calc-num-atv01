@@ -17,6 +17,9 @@ if __name__ == "__main__":
         for intervalo in p.isolar():
             if intervalo.status == "UNICA":
                 for metodo in metodos:
-                    resultado = metodo(p.f, intervalo.a, intervalo.b)
-                    print(resultado)
+                    try:
+                     resultado = metodo(p.f, intervalo.a, intervalo.b)
+                     print(resultado)
+                    except ValueError as erro:
+                        print(f"{metodo.__name__}: ERRO: {erro}")
         p.plotar()
