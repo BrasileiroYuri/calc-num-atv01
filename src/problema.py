@@ -69,6 +69,9 @@ class Problema:
         plt.show()
         plt.close()
 
+    def dydx_central(f,x,h=1e-6)
+        return (f(x+h)-f(x-h))/(2*h)
+
     def dydx(self, x, h=1e-8):
         return (self.f(x + h) - self.f(x)) / h
 
