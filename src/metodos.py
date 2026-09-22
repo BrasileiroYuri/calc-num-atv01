@@ -211,6 +211,65 @@ def secante(f, a, b, eps=EPS, max_iter=MAX_ITER):
 
     return x1, max_iter, False
 
+def custom(f, a, b, eps=EPS, max_iter=MAX_ITER):
+    # Método próprio: híbrido Bissecção + Steffensen, combinando
+    # os pontos fortes de dois métodos já implementados neste arquivo, em
+    # duas fases dentro do mesmo laço.
+    #
+    # A fórmula de Steffensen usa f(x) como "h" para estimar a derivada:
+    #     x_novo = x - f(x)^2 / (f(x+f(x)) - f(x))
+    # Isso só funciona bem quando f(x) já é pequeno (perto da raiz); longe
+    # dela, f(x) grande vira um "h" grande, e a estimativa de derivada fica
+    # ruim. Por isso:
+    #   Fase 1 (intervalo ainda largo): Bissecção pura, que sempre reduz o
+    #   intervalo pela metade de forma segura, até f(x) já estar pequeno.
+    #   Fase 2 (intervalo já pequeno): Steffensen, continuando a partir do
+    #   PRÓPRIO ponto anterior (não do ponto médio do intervalo de novo, que
+    #   jogaria fora a precisão já conquistada). Se o passo falhar (mesmas
+    #   fragilidades do Newton: denominador quase nulo, ou sair do intervalo
+    #   original), o método para e devolve o melhor x encontrado, em vez de
+    #   travar com erro.
+    fa = f(a)
+    fb = f(b)
+    if sinal(fa) * sinal(fb) >= 0:
+        raise ValueError("f(a) e f(b) precisam ter sinais opostos")
+ 
+    a0, b0 = a, b  # limites originais: trava de segurança da fase 2
+    largura_inicial = b - a
+    limiar = 0.01  # NOTE: fração do intervalo original que aciona a troca para Steffensen
+ 
+    x = (a + b) / 2
+    k = 0
+    while k < max_iter and (b - a) > largura_inicial * limiar:
+        k += 1
+        x = (a + b) / 2
+        fx = f(x)
+        if abs(fx) < eps and (b - a) < eps:
+            return x, k, True
+        if sinal(fa) * sinal(fx) < 0:
+            b, fb = x, fx
+        else:
+            a, fa = x, fx
+ 
+    x = (a + b) / 2
+    while k < max_iter:
+        k += 1
+        fx = f(x)
+        if abs(fx) < eps:
+            return x, k, True
+ 
+        denom = f(x + fx) - fx
+        if abs(denom) < 1e-14:
+            return x, k, False  # mesma fragilidade do Newton perto de raízes múltiplas
+ 
+        x_novo = x - fx**2 / denom
+        if x_novo < a0 or x_novo > b0:
+            return x, k, False  # saiu do intervalo original: fica com o melhor x
+ 
+        if abs(x_novo - x) < eps:
+            return x_novo, k, True
+        x = x_novo
+ 
+    return x, max_iter, False
+ 
 
-def custom(f, a, b):
-    pass
