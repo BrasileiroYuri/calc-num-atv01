@@ -14,7 +14,7 @@ def f3(x):
 
 
 def f4(x):
-    return sin(x) * x + 4A
+    return sin(x) * x + 4
 
 #Derivadas para comparar com as númericas
 
@@ -35,4 +35,3 @@ def df4(x):
  
  
 DERIVADAS = {f1: df1, f2: df2, f3: df3, f4: df4}
-

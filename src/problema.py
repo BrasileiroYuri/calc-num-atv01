@@ -81,6 +81,12 @@ class Problema:
         return dydx(self.f, x, h)  # chama a função solta dydx (acima)
 
     def corolario(self, a, b, n=100):
+        # Corolário do Teorema do Anulamento: se f' preserva o sinal em
+        # [a, b], a raiz é única no intervalo. Aqui isso é checado
+        # amostrando a derivada em n pontos igualmente espaçados e vendo se
+        # ela troca de sinal.
+        # NOTE: n é o número de amostras; aumentar deixa a checagem mais
+        # confiável (e mais cara).
         positivo = False
         negativo = False
         for i in range(n + 1):
@@ -91,6 +97,14 @@ class Problema:
                 negativo = True
         return not (positivo and negativo)
 
+    # Limitações do isolamento (Quais Limitações do código):
+    #   - só enxerga trocas de sinal nos pontos tabelados (múltiplos de h);
+    #     uma raiz de multiplicidade par, onde f toca o eixo x sem cruzar,
+    #     não é detectada;
+    #   - o corolário amostra f' em n pontos discretos: se o sinal de f'
+    #     mudar entre duas amostras consecutivas, a checagem de unicidade
+    #     pode "passar" um intervalo que na verdade tem mais de uma raiz;
+    #   - só isola raízes dentro do [a, b] fornecido pelo usuário.
     def isolar(self, tabela=None, h=None, profundidade=0):
         if tabela is None:
             tabela = self.tabela
